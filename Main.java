@@ -6,30 +6,24 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Ingrese los datos de las personas. Escriba 'salir' como nombre para terminar.");
+        System.out.println("\n Bienvenido. Ingrese los datos de las personas. Escriba 'salir' como nombre para terminar.");
 
         while (true) {
-            System.out.print("Nombre: ");
-            String nombre = scanner.nextLine();
-            if (nombre.equalsIgnoreCase("salir")) {
-                break;
-            }
+            String nombre = pedirUnaPalabra(scanner, "\nNombre: ");
+            if (nombre.equalsIgnoreCase("salir")) break;
 
-            System.out.print("Apellido: ");
-            String apellido = scanner.nextLine();
-            System.out.print("Género (Masculino/Femenino): ");
-            String genero = scanner.nextLine();
-            System.out.print("Edad: ");
-            int edad = Integer.parseInt(scanner.nextLine());
+            String apellido = pedirUnaPalabra(scanner, "Apellido: ");
+            String genero = pedirGenero(scanner);
+            int edad = pedirEdad(scanner);
 
             personas.add(new Persona(nombre, apellido, genero, edad));
-            System.out.println("Persona registrada.\n");
+            System.out.println("\nPersona registrada.\n");
         }
 
         if (personas.isEmpty()) {
-            System.out.println("No se registraron personas.");
+            System.out.println("\nNo se registraron personas.");
         } else {
-            System.out.println("\n--- Nombres y Géneros ---");
+            System.out.println("\n--- Nombres, Apellidos y Géneros ---");
             mostrarNombresYGeneros();
 
             System.out.println("\nPromedio de edades: " + calcularPromedioEdad());
@@ -38,9 +32,46 @@ public class Main {
         }
     }
 
+    public static String pedirUnaPalabra(Scanner scanner, String mensaje) {
+        String entrada;
+        while (true) {
+            System.out.print(mensaje);
+            entrada = scanner.nextLine().trim();
+            if (!entrada.contains(" ") && !entrada.isEmpty()) {
+                return entrada;
+            }
+            System.out.println("\n❌ Entrada inválida. Debe ser una sola palabra sin espacios.");
+        }
+    }
+
+    public static String pedirGenero(Scanner scanner) {
+        String entrada;
+        while (true) {
+            System.out.print("Género (m/f): ");
+            entrada = scanner.nextLine().trim().toLowerCase();
+            if (entrada.equals("m")) return "Masculino";
+            if (entrada.equals("f")) return "Femenino";
+            System.out.println("\n❌ Entrada inválida. Solo se permite 'm' o 'f'.");
+        }
+    }
+
+    public static int pedirEdad(Scanner scanner) {
+        while (true) {
+            System.out.print("Edad: ");
+            String entrada = scanner.nextLine().trim();
+            try {
+                int edad = Integer.parseInt(entrada);
+                if (edad >= 0) return edad;
+                System.out.println("\n❌ La edad no puede ser negativa.");
+            } catch (NumberFormatException e) {
+                System.out.println("\n❌ Entrada inválida. Debe ser un número entero.");
+            }
+        }
+    }
+
     public static void mostrarNombresYGeneros() {
         for (Persona persona : personas) {
-            System.out.println("Nombre: " + persona.getNombre() + " | Género: " + persona.getGenero());
+            System.out.println("\nNombre: " + persona.getNombre() +" " + persona.getApellido() + " Género: " + persona.getGenero());
         }
     }
 
